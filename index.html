@@ -1,0 +1,2214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introducción a la Balística - 20 minutos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.3em;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        .header-info {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .time-badge {
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+        }
+
+        .btn-start:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(245, 87, 108, 0.6);
+        }
+
+        /* ===== PROGRESS BAR ===== */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 6px;
+            background: #e0e0e0;
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* ===== MAIN CONTAINER ===== */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* ===== MODULO STYLES ===== */
+        .modulo {
+            background: white;
+            border-radius: 15px;
+            padding: 50px;
+            margin: 30px 0;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modulo-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .modulo-icon {
+            font-size: 3em;
+            color: #2a5298;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .modulo-title {
+            font-size: 2em;
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+
+        .modulo-time {
+            color: #666;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .modulo h2 {
+            color: #1e3c72;
+            margin: 30px 0 20px 0;
+            border-bottom: 3px solid #f5576c;
+            padding-bottom: 10px;
+        }
+
+        .modulo h3 {
+            color: #2a5298;
+            margin: 20px 0 15px 0;
+        }
+
+        .modulo p {
+            margin: 15px 0;
+            color: #555;
+        }
+
+        /* ===== DIAGRAMAS ===== */
+        .diagram-container {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 30px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 250px;
+        }
+
+        .diagram-three-fields {
+            display: flex;
+            gap: 20px;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .field-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 200px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .field-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .field-card h4 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .field-card p {
+            font-size: 0.95em;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        /* ===== COMPONENTES INTERACTIVOS ===== */
+        .interactive-component {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #f5576c;
+        }
+
+        .component-part {
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .component-part:hover {
+            border-color: #f5576c;
+            box-shadow: 0 4px 12px rgba(245, 87, 108, 0.2);
+        }
+
+        .component-part-title {
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .component-part-description {
+            color: #666;
+            font-size: 0.95em;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .component-part.active .component-part-description {
+            max-height: 200px;
+        }
+
+        /* ===== QUIZ ===== */
+        .quiz-container {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 30px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+
+        .quiz-question {
+            margin-bottom: 20px;
+        }
+
+        .quiz-question h4 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .quiz-option {
+            background: white;
+            padding: 12px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .quiz-option:hover {
+            border-color: #f5576c;
+            background: #fff5f7;
+        }
+
+        .quiz-option input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .quiz-result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            font-weight: 600;
+        }
+
+        .quiz-result.correct {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+
+        .quiz-result.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+
+        /* ===== TIMELINE ===== */
+        .timeline {
+            position: relative;
+            padding: 30px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .timeline-item {
+            margin-bottom: 40px;
+            width: 48%;
+        }
+
+        .timeline-item:nth-child(odd) {
+            margin-left: 0;
+            text-align: right;
+            padding-right: 5%;
+        }
+
+        .timeline-item:nth-child(even) {
+            margin-left: 52%;
+            text-align: left;
+            padding-left: 5%;
+        }
+
+        .timeline-content {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .timeline-content::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border: 3px solid #f5576c;
+            border-radius: 50%;
+            top: 30px;
+            right: -66px;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content::after {
+            right: auto;
+            left: -66px;
+        }
+
+        .timeline-number {
+            font-size: 2em;
+            font-weight: 700;
+            color: #f5576c;
+            margin-bottom: 10px;
+        }
+
+        .timeline-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 8px;
+        }
+
+        .timeline-description {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        /* ===== TABLAS ===== */
+        .table-responsive {
+            overflow-x: auto;
+            margin: 30px 0;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        table thead {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+
+        table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        table tbody tr:hover {
+            background: #f5f7fa;
+        }
+
+        /* ===== GRÁFICO TRAYECTORIA ===== */
+        .trajectory-container {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 30px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+        }
+
+        svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* ===== ACORDEONES ===== */
+        .accordion {
+            margin: 20px 0;
+        }
+
+        .accordion-item {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .accordion-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .accordion-header:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+
+        .accordion-content {
+            background: white;
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .accordion-content.active {
+            max-height: 500px;
+            padding: 20px;
+        }
+
+        .accordion-icon {
+            transition: transform 0.3s;
+            font-size: 1.2em;
+        }
+
+        .accordion-header.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        /* ===== BOTONES NAVEGACIÓN ===== */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .btn-prev, .btn-next {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-prev:hover, .btn-next:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-prev:disabled, .btn-next:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ===== MODULO FINAL (QUIZ) ===== */
+        .final-quiz {
+            background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+            padding: 40px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .final-quiz h2 {
+            border: none;
+            margin-bottom: 30px;
+        }
+
+        .quiz-final-item {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .quiz-final-item h4 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .quiz-final-options {
+            display: grid;
+            gap: 12px;
+        }
+
+        .quiz-final-option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .quiz-final-option:hover {
+            background: #fff5f7;
+            border-color: #f5576c;
+        }
+
+        .quiz-final-option input[type="radio"] {
+            margin-right: 15px;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .footer h3 {
+            margin-bottom: 20px;
+        }
+
+        .footer-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .btn-footer {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 10px 20px;
+            border: 2px solid white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .btn-footer:hover {
+            background: white;
+            color: #1e3c72;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            font-size: 0.95em;
+        }
+
+        .footer-links a {
+            color: #ffd700;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .header p {
+                font-size: 1.1em;
+            }
+
+            .header-info {
+                gap: 15px;
+            }
+
+            .modulo {
+                padding: 25px;
+            }
+
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-item,
+            .timeline-item:nth-child(odd) {
+                width: 100%;
+                margin-left: 0;
+                text-align: left;
+                padding: 0 0 0 80px;
+            }
+
+            .timeline-item:nth-child(even) {
+                margin-left: 0;
+                padding: 0 0 0 80px;
+            }
+
+            .timeline-content::after,
+            .timeline-item:nth-child(even) .timeline-content::after {
+                left: -33px;
+                right: auto;
+            }
+
+            .diagram-three-fields {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .field-card {
+                width: 100%;
+            }
+
+            .btn-prev, .btn-next {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+            }
+
+            .final-quiz {
+                padding: 20px;
+            }
+
+            .footer-buttons {
+                flex-direction: column;
+            }
+
+            .btn-footer {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 40px 15px;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .modulo {
+                padding: 15px;
+                margin: 15px 0;
+            }
+
+            .modulo-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .modulo-title {
+                font-size: 1.5em;
+            }
+
+            .container {
+                padding: 10px;
+            }
+        }
+
+        /* ===== INFOGRAFÍA ===== */
+        .infography {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .info-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .info-box-number {
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .info-box-text {
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+
+        /* ===== RESULTADO FINAL ===== */
+        .result-container {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            padding: 30px;
+            border-radius: 10px;
+            margin: 30px 0;
+            text-align: center;
+            display: none;
+        }
+
+        .result-container.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .result-score {
+            font-size: 3em;
+            font-weight: 700;
+            color: #155724;
+            margin-bottom: 10px;
+        }
+
+        .result-message {
+            font-size: 1.2em;
+            color: #155724;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- PROGRESS BAR -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- HEADER -->
+    <div class="header">
+        <h1><i class="fas fa-crosshairs"></i> Introducción a la Balística</h1>
+        <p>Domina los fundamentos de la ciencia del movimiento de proyectiles</p>
+        <div class="header-info">
+            <div class="time-badge">
+                <i class="fas fa-clock"></i>
+                Tiempo: 20 minutos
+            </div>
+            <div class="time-badge">
+                <i class="fas fa-book"></i>
+                5 módulos + Quiz final
+            </div>
+        </div>
+        <button class="btn-start" onclick="startCourse()">
+            <i class="fas fa-play"></i> Comenzar Clase
+        </button>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="container">
+
+        <!-- MÓDULO 1: QUÉ ES LA BALÍSTICA -->
+        <div class="modulo" id="modulo1">
+            <div class="modulo-header">
+                <div class="modulo-icon">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <div>
+                    <h2 class="modulo-title">¿Qué es la Balística?</h2>
+                    <div class="modulo-time">
+                        <i class="fas fa-hourglass-half"></i> ~4 minutos
+                    </div>
+                </div>
+            </div>
+
+            <h2>Definición</h2>
+            <p>La <strong>Balística</strong> es la rama de la física que estudia el movimiento de los proyectiles, considerando las fuerzas que actúan sobre ellos (gravedad, resistencia del aire, etc.). Es fundamental para comprender el comportamiento de municiones, proyectiles militares y análisis forense.</p>
+
+            <h2>Tres Campos Principales</h2>
+            <div class="diagram-container">
+                <div class="diagram-three-fields">
+                    <div class="field-card">
+                        <h4><i class="fas fa-cog"></i> Balística Interna</h4>
+                        <p>Estudio del proyectil dentro del cañón, desde la ignición de la pólvora hasta su salida.</p>
+                    </div>
+                    <div class="field-card">
+                        <h4><i class="fas fa-arrow-right"></i> Balística Externa</h4>
+                        <p>Análisis de la trayectoria del proyectil en el aire, después de abandonar el arma.</p>
+                    </div>
+                    <div class="field-card">
+                        <h4><i class="fas fa-burst"></i> Balística de Efecto</h4>
+                        <p>Estudio del impacto del proyectil sobre el objetivo y sus consecuencias.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn-prev" onclick="previousModule()" disabled>
+                    <i class="fas fa-arrow-left"></i> Anterior
+                </button>
+                <span id="moduleCounter" style="font-weight: 600; color: #666;">1 / 5</span>
+                <button class="btn-next" onclick="nextModule()">
+                    Siguiente <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- MÓDULO 2: CARTUCHO Y PARTES -->
+        <div class="modulo hidden" id="modulo2">
+            <div class="modulo-header">
+                <div class="modulo-icon">
+                    <i class="fas fa-puzzle-piece"></i>
+                </div>
+                <div>
+                    <h2 class="modulo-title">El Cartucho y sus Partes</h2>
+                    <div class="modulo-time">
+                        <i class="fas fa-hourglass-half"></i> ~4 minutos
+                    </div>
+                </div>
+            </div>
+
+            <h2>Componentes del Cartucho</h2>
+            <p>Un cartucho de munición está compuesto por cuatro elementos principales. Haz clic en cada parte para conocer sus detalles:</p>
+
+            <div class="interactive-component">
+                <div class="component-part" onclick="toggleComponent(this)">
+                    <div class="component-part-title">
+                        <i class="fas fa-circle"></i> Proyectil (Bala)
+                    </div>
+                    <div class="component-part-description">
+                        Es la parte que sale del cañón. Típicamente hecho de plomo con revestimiento de latón. Su peso, forma y velocidad determinan la efectividad del disparo. Medido en granos o gramos.
+                    </div>
+                </div>
+
+                <div class="component-part" onclick="toggleComponent(this)">
+                    <div class="component-part-title">
+                        <i class="fas fa-flask"></i> Pólvora
+                    </div>
+                    <div class="component-part-description">
+                        Explosivo controlado que propulsa el proyectil. Se mide en granos. Diferentes tipos de pólvora arden a distintas velocidades. La cantidad exacta determina la presión y velocidad del disparo.
+                    </div>
+                </div>
+
+                <div class="component-part" onclick="toggleComponent(this)">
+                    <div class="component-part-title">
+                        <i class="fas fa-fire"></i> Fulminante
+                    </div>
+                    <div class="component-part-description">
+                        Cápsula de detonación sensible al impacto. Inicia la quema de la pólvora. Sensibilidad ajustable según el tipo. Componente crítico en la iniciación del disparo.
+                    </div>
+                </div>
+
+                <div class="component-part" onclick="toggleComponent(this)">
+                    <div class="component-part-title">
+                        <i class="fas fa-inbox"></i> Vaina (Culote)
+                    </div>
+                    <div class="component-part-description">
+                        Contenedor metálico que aloja la pólvora, proyectil y fulminante. Se expulsa después del disparo. Proporciona la presión necesaria para el funcionamiento. Fabricada en latón, acero o aluminio.
+                    </div>
+                </div>
+            </div>
+
+            <div class="quiz-container">
+                <h3><i class="fas fa-question-circle"></i> Mini-Quiz</h3>
+                <div class="quiz-question">
+                    <h4>¿Cuál es el culote?</h4>
+                    <div class="quiz-options">
+                        <label class="quiz-option">
+                            <input type="radio" name="quiz2" value="incorrect"> El proyectil de la bala
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="quiz2" value="incorrect"> La pólvora dentro
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="quiz2" value="correct"> La vaina metálica que contiene todo
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="quiz2" value="incorrect"> El fulminante detonador
+                        </label>
+                    </div>
+                    <button onclick="checkQuiz('quiz2')" style="margin-top: 15px; padding: 10px 20px; background: #f5576c; color: white; border: none; border-radius: 5px; cursor: pointer;">Verificar</button>
+                    <div id="result-quiz2" class="quiz-result"></div>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn-prev" onclick="previousModule()">
+                    <i class="fas fa-arrow-left"></i> Anterior
+                </button>
+                <span id="moduleCounter" style="font-weight: 600; color: #666;">2 / 5</span>
+                <button class="btn-next" onclick="nextModule()">
+                    Siguiente <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- MÓDULO 3: FASES DEL DISPARO -->
+        <div class="modulo hidden" id="modulo3">
+            <div class="modulo-header">
+                <div class="modulo-icon">
+                    <i class="fas fa-video"></i>
+                </div>
+                <div>
+                    <h2 class="modulo-title">Fases del Disparo</h2>
+                    <div class="modulo-time">
+                        <i class="fas fa-hourglass-half"></i> ~4 minutos
+                    </div>
+                </div>
+            </div>
+
+            <h2>Secuencia de 8 Fases</h2>
+            <p>El disparo ocurre en milisegundos, pero se puede analizar en 8 fases distintas:</p>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-number">1</div>
+                        <div class="timeline-title">Ignición</div>
+                        <div class="timeline-description">El percutor golpea el fulminante, iniciando la reacción.</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-number">2</div>
+                        <div class="timeline-title">Combustión Inicial</div>
+                        <div class="timeline-description">La pólvora comienza a quemarse en pequeñas partículas.</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-number">3</div>
+                        <div class="timeline-title">Presión Creciente</div>
+                        <div class="timeline-description">Los gases se expanden, creando presión dentro de la vaina.</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-number">4</div>
+                        <div class="timeline-title">Movimiento del Proyectil</div>
+                        <div class="timeline-description">La presión alcanza su máximo, el proyectil comienza a moverse.</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-number">5</div>
+                        <div class="timeline-title">Aceleración</div>
+                        <div class="timeline-description">El proyectil se acelera por el cañón acelerado por los gases.</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-number">6</div>
+                        <div class="timeline-title">Máxima Velocidad</div>
+                        <div class="timeline-description">La velocidad es máxima cuando el proyectil abandona el cañón.</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-number">7</div>
+                        <div class="timeline-title">Salida del Proyectil</div>
+                        <div class="timeline-description">El proyectil abandona el cañón (boca). Comienza la balística externa.</div>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-number">8</div>
+                        <div class="timeline-title">Expulsión de Gases</div>
+                        <div class="timeline-description">Los gases residuales salen del cañón tras el proyectil.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn-prev" onclick="previousModule()">
+                    <i class="fas fa-arrow-left"></i> Anterior
+                </button>
+                <span id="moduleCounter" style="font-weight: 600; color: #666;">3 / 5</span>
+                <button class="btn-next" onclick="nextModule()">
+                    Siguiente <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- MÓDULO 4: TRAYECTORIA DEL PROYECTIL -->
+        <div class="modulo hidden" id="modulo4">
+            <div class="modulo-header">
+                <div class="modulo-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div>
+                    <h2 class="modulo-title">Trayectoria del Proyectil</h2>
+                    <div class="modulo-time">
+                        <i class="fas fa-hourglass-half"></i> ~4 minutos
+                    </div>
+                </div>
+            </div>
+
+            <h2>Gráfico Interactivo</h2>
+            <div class="trajectory-container">
+                <svg viewBox="0 0 600 300" width="600" height="300">
+                    <!-- Ejes -->
+                    <line x1="50" y1="250" x2="550" y2="250" stroke="#333" stroke-width="2"/>
+                    <line x1="50" y1="250" x2="50" y2="50" stroke="#333" stroke-width="2"/>
+                    
+                    <!-- Etiquetas ejes -->
+                    <text x="560" y="270" font-size="12" fill="#333">Distancia</text>
+                    <text x="20" y="40" font-size="12" fill="#333">Altura</text>
+                    
+                    <!-- Trayectoria parábola -->
+                    <path d="M 50 240 Q 300 100 550 180" stroke="#f5576c" stroke-width="3" fill="none"/>
+                    
+                    <!-- Punto de salida -->
+                    <circle cx="50" cy="240" r="6" fill="#2a5298"/>
+                    <text x="30" y="260" font-size="11" fill="#2a5298">Salida</text>
+                    
+                    <!-- Punto máximo -->
+                    <circle cx="300" cy="100" r="6" fill="#f093fb"/>
+                    <text x="280" y="80" font-size="11" fill="#f093fb">Vértice</text>
+                    
+                    <!-- Punto impacto -->
+                    <circle cx="550" cy="180" r="6" fill="#2a5298"/>
+                    <text x="530" y="200" font-size="11" fill="#2a5298">Impacto</text>
+                    
+                    <!-- Ángulo -->
+                    <line x1="50" y1="240" x2="120" y2="200" stroke="#667eea" stroke-width="2" stroke-dasharray="5,5"/>
+                    <text x="65" y="230" font-size="10" fill="#667eea">θ</text>
+                    
+                    <!-- Velocidad inicial -->
+                    <line x1="50" y1="240" x2="100" y2="190" stroke="#764ba2" stroke-width="2"/>
+                    <text x="60" y="180" font-size="10" fill="#764ba2">v₀</text>
+                </svg>
+            </div>
+
+            <h2>Elementos que Influyen en la Trayectoria</h2>
+            <div class="accordion">
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span><i class="fas fa-wind"></i> Resistencia del Aire</span>
+                        <i class="fas fa-chevron-down accordion-icon"></i>
+                    </div>
+                    <div class="accordion-content">
+                        La resistencia aerodinámica afecta significativamente la trayectoria. Reduce la velocidad del proyectil constantemente durante el vuelo. Depende de la forma, tamaño y velocidad del proyectil.
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span><i class="fas fa-globe"></i> Gravedad</span>
+                        <i class="fas fa-chevron-down accordion-icon"></i>
+                    </div>
+                    <div class="accordion-content">
+                        La gravedad tira constantemente del proyectil hacia abajo con una aceleración de 9.8 m/s². Causa que la trayectoria sea parabólica en lugar de recta. El efecto aumenta con el tiempo de vuelo.
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span><i class="fas fa-fan"></i> Viento Lateral</span>
+                        <i class="fas fa-chevron-down accordion-icon"></i>
+                    </div>
+                    <div class="accordion-content">
+                        El viento lateral desvía el proyectil de su trayectoria prevista. El efecto es mayor en proyectiles lentos. Los tiradores deben ajustar la puntería según las condiciones del viento.
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span><i class="fas fa-ruler"></i> Ángulo de Salida</span>
+                        <i class="fas fa-chevron-down accordion-icon"></i>
+                    </div>
+                    <div class="accordion-content">
+                        El ángulo inicial del proyectil determina el alcance y altura máxima. Un ángulo de 45° proporciona el máximo alcance teórico en vacío. En la práctica, se ajusta según la distancia al objetivo.
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span><i class="fas fa-tachometer-alt"></i> Velocidad Inicial</span>
+                        <i class="fas fa-chevron-down accordion-icon"></i>
+                    </div>
+                    <div class="accordion-content">
+                        La velocidad inicial (v₀) es la velocidad del proyectil al abandonar el cañón. A mayor velocidad, mayor alcance y menor tiempo de vuelo. Depende de la pólvora, calibre y longitud del cañón.
+                    </div>
+                </div>
+            </div>
+
+            <h2>Fórmula Simplificada</h2>
+            <div class="interactive-component">
+                <p>La ecuación de la trayectoria en condiciones ideales (sin resistencia del aire):</p>
+                    <div style="background: white; padding: 20px; border-radius: 8px; text-align: center; font-size: 1.1em; margin: 15px 0;">
+                        $$y = x \tan(\theta) - \frac{gx^2}{2v_0^2 \cos^2(\theta)}$$
+                    </div>
+                <p style="font-size: 0.9em; color: #666; margin-top: 15px;">
+                    Donde: y = altura, x = distancia horizontal, θ = ángulo, g = gravedad, v₀ = velocidad inicial
+                </p>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn-prev" onclick="previousModule()">
+                    <i class="fas fa-arrow-left"></i> Anterior
+                </button>
+                <span id="moduleCounter" style="font-weight: 600; color: #666;">4 / 5</span>
+                <button class="btn-next" onclick="nextModule()">
+                    Siguiente <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- MÓDULO 5: CALIBRES Y CARTUCHOS -->
+        <div class="modulo hidden" id="modulo5">
+            <div class="modulo-header">
+                <div class="modulo-icon">
+                    <i class="fas fa-ring"></i>
+                </div>
+                <div>
+                    <h2 class="modulo-title">Calibres y Cartuchos</h2>
+                    <div class="modulo-time">
+                        <i class="fas fa-hourglass-half"></i> ~4 minutos
+                    </div>
+                </div>
+            </div>
+
+            <h2>Sistema de Calibres</h2>
+            <p>El calibre es la medida del diámetro del proyectil. Existen dos sistemas principales de medición:</p>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Métrico (mm)</th>
+                            <th>Anglosajón (pulgadas)</th>
+                            <th>Equivalencia</th>
+                            <th>Uso Común</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>5.56</td>
+                            <td>.223 Remington</td>
+                            <td>≈ 5/16"</td>
+                            <td>Rifles militares</td>
+                        </tr>
+                        <tr>
+                            <td>7.62</td>
+                            <td>.308 Winchester</td>
+                            <td>≈ 5/16"</td>
+                            <td>Rifles de largo alcance</td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td>.357 Magnum</td>
+                            <td>≈ 9/32"</td>
+                            <td>Pistolas, revólveres</td>
+                        </tr>
+                        <tr>
+                            <td>12.7</td>
+                            <td>.50 BMG</td>
+                            <td>≈ 1/2"</td>
+                            <td>Armamento pesado</td>
+                        </tr>
+                        <tr>
+                            <td>20</td>
+                            <td>Calibre 20</td>
+                            <td>Escopeta</td>
+                            <td>Armas cortas, escopetas</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2>Ejemplos de Calibres Comunes</h2>
+            <div class="infography">
+                <div class="info-box">
+                    <div class="info-box-number">9mm</div>
+                    <div class="info-box-text">Pistolas de defensa personal y militares</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-box-number">.40 S&W</div>
+                    <div class="info-box-text">Fuerzas de seguridad</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-box-number">.45 ACP</div>
+                    <div class="info-box-text">Pistolas de gran calibre</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-box-number">.22 LR</div>
+                    <div class="info-box-text">Entrenamiento y tiro deportivo</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-box-number">5.56 NATO</div>
+                    <div class="info-box-text">Rifles de asalto militares</div>
+                </div>
+                <div class="info-box">
+                    <div class="info-box-number">7.62x51</div>
+                    <div class="info-box-text">Rifles de batalla principales</div>
+                </div>
+            </div>
+
+            <h2>Tipos de Cartuchos</h2>
+            <div class="interactive-component">
+                <div class="component-part active" onclick="toggleComponent(this)">
+                    <div class="component-part-title">
+                        <i class="fas fa-cube"></i> Cartucho Centrado
+                    </div>
+                    <div class="component-part-description">
+                        El fulminante está en el centro de la base. Diseño más preciso. Usado en pistolas y rifles modernos. Permite mayor control de presión.
+                    </div>
+                </div>
+
+                <div class="component-part" onclick="toggleComponent(this)">
+                    <div class="component-part-title">
+                        <i class="fas fa-ring"></i> Cartucho de Aro
+                    </div>
+                    <div class="component-part-description">
+                        El fulminante está integrado en el aro de la vaina. Usado en armas antiguas y rifles de pequeño calibre. Requiere mecanismo de percusión especial.
+                    </div>
+                </div>
+
+                <div class="component-part" onclick="toggleComponent(this)">
+                    <div class="component-part-title">
+                        <i class="fas fa-bullets"></i> Cartucho Perdigones
+                    </div>
+                    <div class="component-part-description">
+                        Contiene múltiples pequeñas bolitas en lugar de un proyectil sólido. Usado en escopetas de caza y tiro al plato. Mayor área de impacto.
+                    </div>
+                </div>
+
+                <div class="component-part" onclick="toggleComponent(this)">
+                    <div class="component-part-title">
+                        <i class="fas fa-feather"></i> Cartucho Especial
+                    </div>
+                    <div class="component-part-description">
+                        Incluye cartuchos de fogueo, de salva, incendiarios, trazadores. Diseñados para propósitos específicos no convencionales. Uso militar y especializado.
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn-prev" onclick="previousModule()">
+                    <i class="fas fa-arrow-left"></i> Anterior
+                </button>
+                <span id="moduleCounter" style="font-weight: 600; color: #666;">5 / 5</span>
+                <button class="btn-next" onclick="goToQuiz()">
+                    Quiz Final <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- QUIZ FINAL -->
+        <div class="modulo hidden" id="quizFinal">
+            <div class="modulo-header">
+                <div class="modulo-icon">
+                    <i class="fas fa-certificate"></i>
+                </div>
+                <div>
+                    <h2 class="modulo-title">Quiz Final - ¡Demuestra tu Conocimiento!</h2>
+                    <div class="modulo-time">
+                        <i class="fas fa-hourglass-half"></i> ~3 minutos
+                    </div>
+                </div>
+            </div>
+
+            <div class="final-quiz">
+                <h2><i class="fas fa-brain"></i> 5 Preguntas sobre Balística</h2>
+
+                <div class="quiz-final-item">
+                    <h4>1. ¿Cuál es la rama de la balística que estudia el movimiento del proyectil dentro del cañón?</h4>
+                    <div class="quiz-final-options">
+                        <label class="quiz-final-option">
+                            <input type="radio" name="finalQuiz1" value="incorrect"> Balística Externa
+                        </label>
+                        <label class="quiz-final-option">
+                            <input type="radio" name="finalQuiz1" value="correct"> Balística Interna
+                        </label>
+                        <label class="quiz-final-option">
+                            <input type="radio" name="finalQuiz1" value="incorrect"> Balística de Efecto
+                        </label>
+                        <label class="quiz-final-option">
+                            <input type="radio" name="finalQuiz1" value="incorrect"> Balística Teórica
+                        </label>
+                    </div>
+                </div>
+
+                <div class="quiz-final-item">
+                    <h4>2. ¿Cuál es la función principal del fulminante en un cartucho?</h4>
+                    <div class="quiz-final-options">
+                        <label class="quiz-final-option">
+                            <input type="radio" name="finalQuiz2" value="incorrect"> Contener la pólvora
+                        </label>
+                        <label class="quiz-final-option">
+                            <input type="radio" name="finalQuiz2" value="correct"> Iniciar la quema de la pólvora
+                        </label>
+                        <label class="quiz-final-option">
+                            <input type="radio" name="finalQuiz2" value="incorrect"> Alojar el proyectil
+                        </label>
+                        <label class="quiz-final-option">
+                            <input type="radio" name="finalQuiz2" value="incorrect"> Expulsar los gases
+                        </label>
+                    </div>
+                </div>
+
+                <div class="quiz-final-item">
+                    <h4>3. ¿Qué factor NO afecta directamente la trayectoria de un proyectil?</h4>
+                    <div class="quiz-final-options">
+                        <label class="quiz-final-option">
+                            <input type="radio" name="finalQuiz3" value="incorrect"> Resistencia del aire
+                        </label>
+                        <label class="quiz-final-option">
+                            <input type="radio" name="finalQuiz3" value="incorrect"> Velocidad inicial
+                        </label>
+                        <label class="quiz-final-option">
+                            <input type="radio" name="finalQuiz3" value="incorrect"> Ángulo de salida
+                        </label>
+                        <label class="quiz-final-option">
+                            <input type="radio" name="finalQuiz3" value="correct"> Color del proyectil
+                        </label>
+                    </div>
+                </div>
+
+                <div class="quiz-final-item">
+                    <h4>4. ¿Cuántas fases principales tiene el proceso de disparo?</h4>
+                    <div class="quiz-final-options">
+                        <label class="quiz-final-option">
+                            <input type="radio" name="finalQuiz4" value="incorrect"> 5 fases
+                        </label>
+                        <label class="quiz-final-option">
+                            <input type="radio" name="finalQuiz4" value="correct"> 8 fases
+                        </label>
+                        <label class="quiz-final-option">
+                            <input type="radio" name="finalQuiz4" value="incorrect"> 3 fases
+                        </label>
+                        <label class="quiz-final-option">
+                            <input type="radio" name="finalQuiz4" value="incorrect"> 12 fases
+                        </label>
+                    </div>
+                </div>
+
+                <div class="quiz-final-item">
+                    <h4>5. ¿Cuál es el calibre más común en pistolas de defensa personal?</h4>
+                    <div class="quiz-final-options">
+                        <label class="quiz-final-option">
+                            <input type="radio" name="finalQuiz5" value="correct"> 9mm
+                        </label>
+                        <label class="quiz-final-option">
+                            <input type="radio" name="finalQuiz5" value="incorrect"> .22 LR
+                        </label>
+                        <label class="quiz-final-option">
+                            <input type="radio" name="finalQuiz5" value="incorrect"> 12.7 mm
+                        </label>
+                        <label class="quiz-final-option">
+                            <input type="radio" name="finalQuiz5" value="incorrect"> 5.56 NATO
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button onclick="submitFinalQuiz()" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 15px 40px; border: none; border-radius: 30px; cursor: pointer; font-weight: 600; font-size: 1.1em;">
+                    <i class="fas fa-check"></i> Enviar Respuestas
+                </button>
+            </div>
+
+            <div id="resultFinal" class="result-container">
+                <div class="result-score" id="finalScore"></div>
+                <div class="result-message" id="finalMessage"></div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn-prev" onclick="previousModule()">
+                    <i class="fas fa-arrow-left"></i> Anterior
+                </button>
+                <span style="font-weight: 600; color: #666;">Quiz Final</span>
+                <button class="btn-next" disabled style="opacity: 0;">Siguiente</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <div class="footer-content">
+            <h3><i class="fas fa-download"></i> Recursos Adicionales</h3>
+            <div class="footer-buttons">
+                <button class="btn-footer" onclick="downloadPDF()">
+                    <i class="fas fa-file-pdf"></i> Descargar PDF
+                </button>
+                <button class="btn-footer" onclick="shareContent()">
+                    <i class="fas fa-share-alt"></i> Compartir
+                </button>
+                <button class="btn-footer" onclick="resetCourse()">
+                    <i class="fas fa-redo"></i> Reiniciar
+                </button>
+            </div>
+
+            <div class="footer-links">
+                <a href="#" onclick="alert('Para más información, consulta fuentes especializadas en balística.')">Más Información</a>
+                <a href="#" onclick="alert('Contacta con un instructor certificado de armería.')">Contacto</a>
+                <a href="#" onclick="alert('Términos de Uso disponibles.')">Términos de Uso</a>
+                <a href="#" onclick="alert('Privacidad disponible.')">Privacidad</a>
+            </div>
+
+            <p style="margin-top: 30px; font-size: 0.9em; opacity: 0.8;">
+                <i class="fas fa-copyright"></i> 2024 Introducción a la Balística | Fines Educativos
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let currentModule = 0;
+        const modules = ['modulo1', 'modulo2', 'modulo3', 'modulo4', 'modulo5', 'quizFinal'];
+
+        // Iniciar curso
+        function startCourse() {
+            document.querySelector('.header').style.display = 'none';
+            showModule(0);
+            updateProgress();
+        }
+
+        // Mostrar módulo
+        function showModule(index) {
+            modules.forEach((mod, i) => {
+                const element = document.getElementById(mod);
+                if (i === index) {
+                    element.classList.remove('hidden');
+                } else {
+                    element.classList.add('hidden');
+                }
+            });
+            currentModule = index;
+            updateProgress();
+            updateButtons();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Módulo siguiente
+        function nextModule() {
+            if (currentModule < modules.length - 1) {
+                showModule(currentModule + 1);
+            }
+        }
+
+        // Módulo anterior
+        function previousModule() {
+            if (currentModule > 0) {
+                showModule(currentModule - 1);
+            }
+        }
+
+        // Ir al quiz
+        function goToQuiz() {
+            showModule(modules.length - 1);
+        }
+
+        // Actualizar barra de progreso
+        function updateProgress() {
+            const progress = ((currentModule + 1) / modules.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        // Actualizar botones
+        function updateButtons() {
+            const prevButtons = document.querySelectorAll('.btn-prev');
+            const nextButtons = document.querySelectorAll('.btn-next');
+            
+            prevButtons.forEach(btn => {
+                btn.disabled = currentModule === 0;
+            });
+            
+            nextButtons.forEach(btn => {
+                if (currentModule === modules.length - 1) {
+                    btn.disabled = true;
+                } else {
+                    btn.disabled = false;
+                }
+            });
+        }
+
+        // Toggle componentes interactivos
+        function toggleComponent(element) {
+            const description = element.querySelector('.component-part-description');
+            element.classList.toggle('active');
+        }
+
+        // Toggle acordeón
+        function toggleAccordion(header) {
+            header.classList.toggle('active');
+            const content = header.nextElementSibling;
+            content.classList.toggle('active');
+        }
+
+        // Verificar quiz
+        function checkQuiz(quizName) {
+            const selected = document.querySelector(`input[name="${quizName}"]:checked`);
+            const resultElement = document.getElementById(`result-${quizName}`);
+
+            if (!selected) {
+                resultElement.textContent = 'Por favor, selecciona una respuesta';
+                resultElement.className = 'quiz-result incorrect';
+                return;
+            }
+
+            if (selected.value === 'correct') {
+                resultElement.textContent = '✓ ¡Correcto! Excelente trabajo.';
+                resultElement.className = 'quiz-result correct';
+            } else {
+                resultElement.textContent = '✗ Incorrecto. Revisa el contenido del módulo.';
+                resultElement.className = 'quiz-result incorrect';
+            }
+        }
+
+        // Quiz final
+        function submitFinalQuiz() {
+            let correctAnswers = 0;
+            const totalQuestions = 5;
+
+            for (let i = 1; i <= totalQuestions; i++) {
+                const selected = document.querySelector(`input[name="finalQuiz${i}"]:checked`);
+                if (selected && selected.value === 'correct') {
+                    correctAnswers++;
+                }
+            }
+
+            const percentage = (correctAnswers / totalQuestions) * 100;
+            const resultElement = document.getElementById('resultFinal');
+            const scoreElement = document.getElementById('finalScore');
+            const messageElement = document.getElementById('finalMessage');
+
+            scoreElement.textContent = `${correctAnswers}/${totalQuestions}`;
+            
+            if (percentage === 100) {
+                messageElement.textContent = '¡Perfecto! Has dominado la balística. 🎯';
+                messageElement.style.color = '#155724';
+            } else if (percentage >= 80) {
+                messageElement.textContent = '¡Excelente! Buen desempeño. 👏';
+                messageElement.style.color = '#155724';
+            } else if (percentage >= 60) {
+                messageElement.textContent = 'Bien. Revisa los módulos para mejorar.';
+                messageElement.style.color = '#856404';
+            } else {
+                messageElement.textContent = 'Necesitas estudiar más. Reinicia el curso.';
+                messageElement.style.color = '#721c24';
+            }
+
+            resultElement.classList.add('show');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+
+        function addFormulaAsImage(doc, yPos) {
+    // Crear canvas con la fórmula
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    canvas.width = 800;
+    canvas.height = 120;
+    
+    // Fondo blanco
+    ctx.fillStyle = '#f0f4ff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Borde izquierdo rojo
+    ctx.fillStyle = '#f5576c';
+    ctx.fillRect(0, 0, 8, canvas.height);
+    
+    // Borde general
+    ctx.strokeStyle = '#e0e0e0';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, canvas.width, canvas.height);
+    
+    // Texto de la fórmula
+    ctx.fillStyle = '#1e3c72';
+    ctx.font = 'bold 36px "Courier New"';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('y = x·tan(θ) - (g·x²)/(2·v₀²·cos²(θ))', 400, 60);
+    
+    // Convertir a imagen
+    const imgData = canvas.toDataURL('image/png');
+    
+    // Agregar al PDF
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const marginLeft = 20;
+    const marginRight = 20;
+    const imgWidth = pageWidth - marginLeft - marginRight;
+    const imgHeight = (imgWidth * canvas.height) / canvas.width;
+    
+    doc.addImage(imgData, 'PNG', marginLeft, yPos - 5, imgWidth, imgHeight);
+    
+    return imgHeight;
+}
+
+        // Descargar PDF
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4',
+                
+            });
+
+            // Configuración de márgenes y colores
+            const marginLeft = 20;
+            const marginRight = 20;
+            const marginTop = 25;
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
+            const textWidth = pageWidth - marginLeft - marginRight;
+            let yPosition = marginTop;
+
+            // Función para agregar página si es necesario
+            function checkPageBreak(spaceNeeded = 20) {
+                if (yPosition + spaceNeeded > pageHeight - 20) {
+                    doc.addPage();
+                    yPosition = marginTop;
+                return true;
+                }
+            return false;
+            }
+
+        // Función para agregar título
+        function addTitle(text, fontSize = 20) {
+            checkPageBreak(15);
+            doc.setFont('Arial', 'bold');
+            doc.setFontSize(fontSize);
+            doc.setTextColor(30, 60, 114); // Azul marino
+            doc.text(text, pageWidth / 2, yPosition, { align: 'center' });
+            yPosition += 12;
+        
+            // Línea decorativa
+            doc.setDrawColor(245, 65, 108); // Rosa
+            doc.setLineWidth(0.5);
+            doc.line(marginLeft, yPosition, pageWidth - marginRight, yPosition);
+            yPosition += 8;
+        }
+
+        // Función para agregar subtítulo
+        function addSubtitle(text) {
+            checkPageBreak(10);
+            doc.setFont('Arial', 'bold');
+            doc.setFontSize(14);
+            doc.setTextColor(42, 82, 152); // Azul oscuro
+            doc.text(text, marginLeft, yPosition);
+            yPosition += 8;
+        }
+
+        // Función para agregar párrafo
+        function addParagraph(text, fontSize = 11, spacing = 5) {
+            checkPageBreak(spacing + 5);
+            doc.setFont('Arial', 'normal');
+            doc.setFontSize(fontSize);
+            doc.setTextColor(85, 85, 85); // Gris oscuro
+            const textLines = doc.splitTextToSize(text, textWidth);
+            doc.text(textLines, marginLeft, yPosition);
+            yPosition += textLines.length * spacing + 5;
+        }
+
+        // Función para agregar lista
+        function addList(items) {
+            checkPageBreak(items.length * 6);
+            doc.setFont('Arial', 'normal');
+            doc.setFontSize(11);
+            doc.setTextColor(85, 85, 85);
+        
+            items.forEach(item => {
+                const textLines = doc.splitTextToSize(`• ${item}`, textWidth - 5);
+                doc.text(textLines, marginLeft + 5, yPosition);
+                yPosition += textLines.length * 5 + 2;
+            });
+            yPosition += 3;
+        }
+
+        // Función para agregar tabla
+        function addTable(headers, rows) {
+            checkPageBreak(rows.length * 8 + 15);
+        
+            // Encabezados
+            doc.setFont('Arial', 'bold');
+            doc.setFontSize(10);
+            doc.setFillColor(30, 60, 114);
+            doc.setTextColor(255, 255, 255);
+        
+            const colWidths = [(pageWidth - marginLeft - marginRight) / headers.length];
+            const cellWidth = (pageWidth - marginLeft - marginRight) / headers.length;
+        
+            headers.forEach((header, index) => {
+                doc.rect(marginLeft + (index * cellWidth), yPosition - 5, cellWidth, 8, 'F');
+                doc.text(header, marginLeft + (index * cellWidth) + 2, yPosition);
+            });
+        
+            yPosition += 10;
+        
+            // Filas
+            doc.setFont('Arial', 'normal');
+            doc.setFontSize(10);
+            doc.setTextColor(85, 85, 85);
+        
+            rows.forEach(row => {
+                row.forEach((cell, index) => {
+                    doc.setDrawColor(200, 200, 200);
+                    doc.rect(marginLeft + (index * cellWidth), yPosition - 5, cellWidth, 8);
+                    doc.text(String(cell), marginLeft + (index * cellWidth) + 2, yPosition);
+                });
+                yPosition += 8;
+            });
+        
+            yPosition += 5;
+        }
+
+        // ==================== CONTENIDO DEL PDF ====================
+
+        // PORTADA
+        doc.setFontSize(28);
+        doc.setFont('Arial', 'bold');
+        doc.setTextColor(30, 60, 114);
+        doc.text('Introducción a la Balística', pageWidth / 2, 30, { align: 'center' });
+
+        doc.setFontSize(14);
+        doc.setFont('Arial', 'normal');
+        doc.setTextColor(42, 82, 152);
+        doc.text('Curso Completo en 20 Minutos', pageWidth / 2, 45, { align: 'center' });
+
+        // Línea decorativa
+        doc.setDrawColor(245, 50, 108);
+        doc.setLineWidth(1);
+        doc.line(60, 82, 150, 82);
+
+        doc.setFontSize(11);
+        doc.setTextColor(120, 60, 120);
+        doc.text('Domina los fundamentos de la ciencia del movimiento de proyectiles', pageWidth / 2, 90, { align: 'center' });
+        doc.text('5 Módulos | Quiz Final | Certificado de Aprovechamiento', pageWidth / 2, 100, { align: 'center' });
+
+        yPosition = 110;
+
+        // MÓDULO 1: ¿QUÉ ES LA BALÍSTICA?
+        addTitle('\nMódulo 1: ¿Qué es la Balística?');
+
+        addParagraph(
+           '\nLa Balística es la rama de la física que estudia el movimiento de los proyectiles, considerando todas las fuerzas que actúan sobre ellos (gravedad, resistencia del aire, velocidad inicial, ángulo de disparo, etc.). Esta disciplina es fundamental para comprender el comportamiento de municiones, proyectiles militares, análisis forense y aplicaciones deportivas.'
+        );
+
+        addSubtitle('\nTres Campos Principales');
+
+        addParagraph(
+            '\nLa Balística se divide en tres campos de estudio especializados, cada uno enfocado en una etapa diferente del movimiento del proyectil:'
+        );
+
+        addList([
+            'Balística Interna: Estudia el movimiento del proyectil dentro del cañón, desde el momento de la ignición de la pólvora hasta su salida. Analiza la presión, velocidad y aceleración del proyectil durante esta fase crítica.',
+            'Balística Externa: Analiza la trayectoria del proyectil en el aire después de abandonar el arma. Considera factores como la resistencia aerodinámica, la gravedad, el viento y otros elementos ambientales.',
+            'Balística de Efecto: Estudia el impacto del proyectil sobre el objetivo y sus consecuencias. Incluye análisis del daño, penetración y energía transferida al punto de impacto.'
+        ]);
+
+        // MÓDULO 2: CARTUCHO Y PARTES
+        addTitle('\nMódulo 2: El Cartucho y sus Partes');
+
+        addParagraph(
+            '\nUn cartucho de munición es una unidad de fuego que contiene todos los elementos necesarios para producir un disparo. Está compuesto por cuatro componentes principales que trabajan en conjunto para propulsar el proyectil:'
+        );
+
+        addSubtitle('Componentes del Cartucho');
+        
+        addList([
+            'Proyectil (Bala): Es la parte que sale del cañón y golpea el objetivo. Típicamente hecho de plomo con revestimiento de latón (u otros materiales). Su peso se mide en granos (gr) o gramos (g). La forma y aerodinámica del proyectil afectan directamente su trayectoria y alcance. Un proyectil típico de 9mm pesa entre 115-147 granos.',
+            'Pólvora: Es el explosivo controlado que propulsa el proyectil. Se mide en granos y varía según el tipo y marca. Diferentes tipos de pólvora arden a distintas velocidades (rápida, media, lenta), lo que afecta la velocidad y presión del disparo. La cantidad exacta determina la energía del disparo.',
+            'Fulminante: Es una pequeña cápsula de detonación sensible al impacto mecánico del percutor del arma. Inicia la quema de la pólvora. Su sensibilidad es ajustable según el tipo y es un componente crítico en la iniciación del disparo. Sin él, no hay combustión de la pólvora.',
+            'Vaina (Culote): Es el contenedor metálico que aloja la pólvora, proyectil y fulminante. Se expulsa después del disparo. Proporciona el sello y la presión necesaria para el funcionamiento correcto. Fabricada en latón, acero o aluminio, su resistencia es crítica para la seguridad.'
+        ]);
+
+        addSubtitle('\nEspecificaciones Típicas de un Cartucho 9mm');
+
+        addList([
+            '\nPeso total: 7-9 gramos',
+            'Proyectil: 115-147 granos (7.5-9.5 gramos)',
+            'Pólvora: 5.5-7.5 granos',
+            'Velocidad inicial: 800-1200 pies/segundo (244-366 m/s)',
+            'Energía: 300-400 pies-libra (407-542 Julios)',
+            'Presión: 35,000 PSI (Presión máxima permitida)'
+        ]);
+
+        // MÓDULO 3: FASES DEL DISPARO
+        addTitle('\nMódulo 3: Fases del Disparo');
+
+        addParagraph(
+            '\nEl disparo ocurre en milisegundos, pero el proceso físico se puede analizar en 8 fases distintas y bien definidas. Cada fase es crítica para comprender cómo funcionan las armas de fuego:'
+        );
+
+        const phases = [
+            {
+                num: '1',
+                title: 'Ignición',
+                desc: 'El percutor del arma golpea con fuerza el fulminante en la base de la vaina. Este impacto mecánico produce una pequeña explosión que inicia toda la cadena de eventos. Es el comienzo de todo el proceso de disparo.'
+            },
+            {
+                num: '2',
+                title: 'Combustión Inicial',
+                desc: 'La pólvora comienza a quemarse en pequeñas partículas. La temperatura alcanza cientos de grados centígrados. Esta combustión produce gases a alta presión y temperatura.'
+            },
+            {
+                num: '3',
+                title: 'Presión Creciente',
+                desc: 'Los gases producidos por la combustión se expanden en el espacio limitado de la vaina, creando presión interna. La presión aumenta exponencialmente en milisegundos. Esta presión es lo que impulsa el proyectil.'
+            },
+            {
+                num: '4',
+                title: 'Movimiento del Proyectil',
+                desc: 'Cuando la presión alcanza su máximo nivel, vence la resistencia y fricción del proyectil en la vaina, iniciando su movimiento. El proyectil comienza lentamente y se acelera rápidamente.'
+            },
+            {
+                num: '5',
+                title: 'Aceleración en el Cañón',
+                desc: 'El proyectil es acelerado violentamente por los gases en expansión dentro del cañón. Las estrías del cañón hacen girar el proyectil, estabilizando su vuelo. La aceleración puede llegar a 100,000 G.'
+            },
+            {
+                num: '6',
+                title: 'Máxima Velocidad',
+                desc: 'La velocidad del proyectil es máxima cuando abandona el cañón (a la salida de la boca). En este punto, toda la energía de los gases ha sido transferida. Para un 9mm, esto ocurre en aproximadamente 1 milisegundo.'
+            },
+            {
+                num: '7',
+                title: 'Salida del Proyectil',
+                desc: 'El proyectil abandona completamente el cañón por la boca del arma. Este es el final de la Balística Interna y el comienzo de la Balística Externa. La vaina comienza a expulsar los gases residuales.'
+            },
+            {
+                num: '8',
+                title: 'Expulsión de Gases',
+                desc: 'Los gases residuales a alta presión y temperatura salen del cañón tras el proyectil. Esto produce el relámpago característico y el ruido del disparo. Los gases ceden parte de su energía al aire circundante.'
+            }
+        ];
+
+        phases.forEach(phase => {
+            checkPageBreak(12);
+            doc.setFont('Arial', 'bold');
+            doc.setFontSize(12);
+            doc.setTextColor(245, 87, 108);
+            doc.text(`Fase ${phase.num}: ${phase.title}`, marginLeft, yPosition);
+            yPosition += 6;
+            
+            doc.setFont('Arial', 'normal');
+            doc.setFontSize(10);
+            doc.setTextColor(85, 85, 85);
+            const descLines = doc.splitTextToSize(phase.desc, textWidth);
+            doc.text(descLines, marginLeft, yPosition);
+            yPosition += descLines.length * 4 + 3;
+        });
+
+        // MÓDULO 4: TRAYECTORIA DEL PROYECTIL
+        addTitle('\nMódulo 4: Trayectoria del Proyectil');
+
+        addParagraph(
+           'La trayectoria es la ruta que sigue el proyectil desde que sale del cañón hasta impactar en el objetivo. Es una ruta parabólica (en forma de parábola) debido a la influencia simultánea de múltiples fuerzas físicas.'
+        );
+
+        addSubtitle('Elementos que Influyen en la Trayectoria');
+
+        checkPageBreak(50);
+        doc.setFont('Arial', 'bold');
+        doc.setFontSize(11);
+        doc.setTextColor(42, 82, 152);
+        doc.text('Resistencia del Aire', marginLeft, yPosition);
+        yPosition += 6;
+    
+        doc.setFont('Arial', 'normal');
+        doc.setFontSize(10);
+        doc.setTextColor(85, 85, 85);
+        let resistanceText = doc.splitTextToSize('La resistencia aerodinámica (arrastre) es una fuerza que se opone al movimiento del proyectil. Afecta significativamente la trayectoria al reducir constantemente su velocidad. Depende de la forma, tamaño, peso del proyectil y de la densidad del aire. Proyectiles más ligeros y de forma puntiaguda experimentan menos resistencia. Esta resistencia es proporcional al cuadrado de la velocidad.', textWidth);
+        doc.text(resistanceText, marginLeft, yPosition);
+        yPosition += resistanceText.length * 4 + 5;
+
+        doc.setFont('Arial', 'bold');
+        doc.setFontSize(11);
+        doc.setTextColor(42, 82, 152);
+        doc.text('Gravedad', marginLeft, yPosition);
+        yPosition += 6;
+    
+        doc.setFont('Arial', 'normal');
+        doc.setFontSize(10);
+        doc.setTextColor(85, 85, 85);
+        let gravityText = doc.splitTextToSize('La gravedad tira constantemente del proyectil hacia abajo con una aceleración de 9.8 m/s². Causa que la trayectoria sea parabólica en lugar de recta. El efecto aumenta exponencialmente con el tiempo de vuelo. Un proyectil disparado horizontalmente caería verticalmente la misma distancia que un objeto dejado caer desde la misma altura, en el mismo tiempo.', textWidth);
+        doc.text(gravityText, marginLeft, yPosition);
+        yPosition += gravityText.length * 4 + 5;
+
+        doc.setFont('Arial', 'bold');
+        doc.setFontSize(11);
+        doc.setTextColor(42, 82, 152);
+        doc.text('Viento Lateral', marginLeft, yPosition);
+        yPosition += 6;
+    
+        doc.setFont('Arial', 'normal');
+        doc.setFontSize(10);
+        doc.setTextColor(85, 85, 85);
+        let windText = doc.splitTextToSize('El viento lateral desvía el proyectil de su trayectoria prevista. El efecto es mayor en proyectiles lentos y a mayores distancias. Los tiradores de precisión deben ajustar la puntería según las condiciones del viento. Un viento de 10 nudos (18.5 km/h) puede desviar un proyectil varios centímetros a 100 metros.', textWidth);
+        doc.text(windText, marginLeft, yPosition);
+        yPosition += windText.length * 4 + 5;
+
+        doc.setFont('Arial', 'bold');
+        doc.setFontSize(11);
+        doc.setTextColor(42, 82, 152);
+        doc.text('Ángulo de Salida', marginLeft, yPosition);
+        yPosition += 6;
+    
+        doc.setFont('Arial', 'normal');
+        doc.setFontSize(10);
+        doc.setTextColor(85, 85, 85);
+        let angleText = doc.splitTextToSize('El ángulo inicial del proyectil (elevación) determina el alcance y altura máxima. Un ángulo de 45° proporciona el máximo alcance teórico en vacío (sin resistencia del aire). En la práctica, se ajusta según la distancia al objetivo y las características del arma. Ángulos menores producen trayectorias más planas, ángulos mayores producen trayectorias arqueadas.', textWidth);
+        doc.text(angleText, marginLeft, yPosition);
+        yPosition += angleText.length * 4 + 5;
+
+        doc.setFont('Arial', 'bold');
+        doc.setFontSize(11);
+        doc.setTextColor(42, 82, 152);
+        doc.text('Velocidad Inicial', marginLeft, yPosition);
+        yPosition += 6;
+        
+        doc.setFont('Arial', 'normal');
+        doc.setFontSize(10);
+        doc.setTextColor(85, 85, 85);
+        let velocityText = doc.splitTextToSize('La velocidad inicial es la velocidad del proyectil al abandonar el cañón. A mayor velocidad, mayor alcance y menor tiempo de vuelo. Depende de varios factores: tipo y cantidad de pólvora, calibre del arma, longitud del cañón y peso del proyectil. Un pequeño aumento en la velocidad inicial produce un aumento significativo en el alcance.', textWidth);
+        doc.text(velocityText, marginLeft, yPosition);
+        yPosition += velocityText.length * 4 + 5;
+
+        addSubtitle('\nFórmula de la Trayectoria');
+
+checkPageBreak(15);
+doc.setFont('Arial', 'normal');
+doc.setFontSize(10);
+doc.setTextColor(85, 85, 85);
+doc.text('La ecuación de la trayectoria en condiciones ideales (sin resistencia del aire):', marginLeft, yPosition);
+yPosition += 10;
+
+// ===== AGREGAR IMAGEN DE LA FÓRMULA =====
+const formulaHeight = addFormulaAsImage(doc, yPosition);
+yPosition += formulaHeight + 8;
+
+// ===== EXPLICACIÓN DE VARIABLES =====
+doc.setFont('Arial', 'normal');
+doc.setFontSize(10);
+doc.setTextColor(85, 85, 85);
+doc.text('Donde:', marginLeft, yPosition);
+yPosition += 6;
+
+// Lista de variables
+const variables = [
+    'y = altura del proyectil (metros)',
+    'x = distancia horizontal recorrida (metros)',
+    'θ (theta) = ángulo de salida (grados)',
+    'g = aceleración debido a la gravedad (9.8 m/s²)',
+    'v₀ = velocidad inicial del proyectil (m/s)',
+    'cos = función coseno'
+];
+
+doc.setFont('Arial', 'normal');
+doc.setFontSize(9);
+
+variables.forEach((variable) => {
+    // Viñeta
+    doc.setTextColor(245, 87, 108);
+    doc.text('•', marginLeft + 5, yPosition);
+    
+    // Texto
+    doc.setTextColor(85, 85, 85);
+    const textLines = doc.splitTextToSize(variable, textWidth - 15);
+    doc.text(textLines, marginLeft + 12, yPosition);
+    yPosition += textLines.length * 4 + 2;
+});
+
+yPosition += 3;
+
+
+        // MÓDULO 5: CALIBRES Y CARTUCHOS
+        addTitle('\nMódulo 5: Calibres y Cartuchos');
+
+        addParagraph(
+            'El calibre es la medida del diámetro del proyectil o del diámetro interior del cañón del arma. Existen dos sistemas principales de medición internacional: el sistema métrico (en milímetros) y el sistema anglosajón (en pulgadas).'
+        );
+
+        addSubtitle('Tabla Comparativa: Métrico vs Anglosajón');
+
+        addTable(
+         ['Métrico (mm)', 'Anglosajón (in)', 'Equivalencia', 'Uso Común'],
+         [
+            ['5.56', '.223 Rem', '≈ 0.224"', 'Rifles militares'],
+            ['7.62', '.308 Win', '≈ 0.308"', 'Rifles de precisión'],
+            ['9', '9mm Luger', '≈ 0.355"', 'Pistolas, revólveres'],
+            ['.357', '.357 Magnum', '≈ 0.357"', 'Revólveres potentes'],
+            ['.40', '.40 S&W', '≈ 0.40"', 'Fuerzas de seguridad'],
+            ['.45', '.45 ACP', '≈ 0.45"', 'Pistolas de gran calibre'],
+            ['12.7', '.50 BMG', '≈ 0.50"', 'Armamento pesado'],
+            ['.22', '.22 LR', '≈ 0.222"', 'Entrenamiento']
+        ]
+        );
+
+        addSubtitle('Ejemplos de Calibres Comunes');
+
+        addList([
+            '9mm Parabellum: Calibre más usado en defensa personal y militares. Velocidad: 350-400 m/s. Energía: 400-500 Julios. Muy versátil y confiable.',
+            '.40 S&W: Usado por fuerzas de seguridad. Velocidad: 350-400 m/s. Energía: 600-700 Julios. Mayor poder de parada que 9mm.',
+            '.45 ACP: Pistolas de gran calibre, típicamente más lento pero con más energía. Velocidad: 250-300 m/s. Energía: 500-600 Julios.',
+            '.22 LR: Usado para entrenamiento y tiro deportivo. Muy económico. Velocidad: 350-400 m/s. Energía: 80-100 Julios.',
+            '5.56 NATO: Rifles de asalto militares. Velocidad: 800-900 m/s. Energía: 1600-1800 Julios. Excelente penetración.',
+            '7.62×51 NATO: Rifles de batalla principales y armas de precisión. Velocidad: 800-850 m/s. Energía: 3200-3400 Julios. Máximo poder de fuego.'
+        ]);
+
+        addSubtitle('Tipos de Cartuchos');
+
+        addList([
+            'Cartucho Centrado: El fulminante está en el centro de la base. Diseño más preciso y moderno. Usado en pistolas y rifles contemporáneos. Permite mayor control de presión.',
+            'Cartucho de Aro: El fulminante está integrado en el aro de la vaina. Usado en armas antiguas y rifles de pequeño calibre. Requiere mecanismo de percusión especial.',
+            'Cartucho con Perdigones: Contiene múltiples pequeñas bolitas (perdigones) en lugar de un proyectil sólido. Usado en escopetas de caza y tiro al plato. Mayor área de impacto pero menor precisión.',
+            'Cartuchos Especiales: Incluyen cartuchos de fogueo (sin proyectil), de salva, incendiarios y trazadores. Diseñados para propósitos específicos no convencionales. Uso principalmente militar y especializado.'
+        ]);
+
+        // RESUMEN FINAL
+        addTitle('\nResumen y Conclusiones');
+
+        addParagraph(
+            'La Balística es una ciencia fundamental que combina física, matemáticas y conocimiento empírico. Entender sus principios es esencial para cualquier persona involucrada en el uso, mantenimiento o análisis de armas de fuego.'
+        );
+
+        addSubtitle('Puntos Clave para Recordar:');
+
+        addList([
+            'La Balística estudia el movimiento de proyectiles en tres fases: Interna, Externa y de Efecto.',
+            'Un cartucho está compuesto por cuatro partes: proyectil, pólvora, fulminante y vaina.',
+            'El disparo es un proceso de 8 fases que ocurre en milisegundos.',
+            'La trayectoria del proyectil es parabólica y está afectada por múltiples factores físicos.',
+            'El calibre es la medida del diámetro del proyectil y determina el poder y alcance del arma.',
+            'La comprensión de estos principios es esencial para la seguridad, precisión y efectividad.'
+        ]);
+
+        // PIE DE PÁGINA
+        const pageCount = doc.internal.pages.length - 1;
+        for (let i = 1; i <= pageCount; i++) {
+            doc.setPage(i);
+            doc.setFontSize(9);
+            doc.setTextColor(150, 150, 150);
+            doc.text(
+                `Página ${i} de ${pageCount}`,
+                pageWidth / 2,
+                pageHeight - 10,
+                { align: 'center' }
+            );
+            
+            doc.setFontSize(8);
+            doc.text(
+                '\nIntroducción a la Balística - Curso Completo en 20 minutos - Santiago Mendoza',
+                pageWidth / 2,
+                pageHeight - 5,
+                { align: 'center' }
+            );
+        }
+
+        // DESCARGAR
+        doc.save('Introduccion_Ballistica_Completo.pdf');
+        
+        // Notificación
+        showNotification('✓ PDF descargado correctamente');
+        }   
+
+// Función para mostrar notificación
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        padding: 15px 25px;
+        border-radius: 8px;
+        z-index: 9999;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+        animation: slideIn 0.3s ease;
+    `;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+
+
+
+        // Compartir contenido
+        function shareContent() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Introducción a la Balística',
+                    text: 'Aprende sobre balística en 20 minutos',
+                    url: window.location.href
+                });
+            } else {
+                alert('Comparte este enlace: ' + window.location.href);
+            }
+        }
+
+        // Reiniciar curso
+        function resetCourse() {
+            location.reload();
+        }
+
+        // Inicializar
+        window.addEventListener('load', function() {
+            updateProgress();
+            updateButtons();
+        });
+    </script>
+</body>
+</html>
+    
